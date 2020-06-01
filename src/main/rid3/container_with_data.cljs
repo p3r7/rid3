@@ -1,7 +1,8 @@
 (ns rid3.container-with-data
   (:require
    [cljsjs.d3]
-   [rid3.util :as util]))
+   [rid3.util :as util]
+   [rid3.data :as data]))
 
 
 (defn piece-did-mount [piece opts prev-classes]
