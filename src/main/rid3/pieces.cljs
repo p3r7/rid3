@@ -3,6 +3,7 @@
    [cljsjs.d3]
    [rid3.util :as util]
    [rid3.container :as container]
+   [rid3.container-with-data :as container-with-data]
    [rid3.elem :as elem]
    [rid3.elem-with-data :as elem-with-data]
    [rid3.raw :as raw]
@@ -14,6 +15,7 @@
 (defn warn-if-piece-needs-class [kind class]
   (when (and (not class)
              (or (= kind :container)
+                 (= kind :container-with-data)
                  (= kind :elem)
                  (= kind :elem-with-data)))
     (js/console.warn (str "[rid3] a " kind " needs to have a class"))))
@@ -57,6 +59,9 @@
        (= kind :container)
        (container/piece-did-mount piece opts prev-classes)
 
+       (= kind :container-with-data)
+       (container-with-data/piece-did-mount piece opts prev-classes)
+
        (= kind :elem)
        (elem/piece-did-mount piece opts prev-classes)
 
@@ -84,7 +89,9 @@
      (let [children (get piece :children)]
        (cond
          (and children
-              (= kind :container))
+              (or
+               (= kind :container)
+               (= kind :container-with-data)))
          (doseq [child children]
            (handle-piece-did-mount child opts (conj prev-classes class)))
 
@@ -109,6 +116,9 @@
      (cond
        (= kind :container)
        (container/piece-did-update piece opts prev-classes)
+
+       (= kind :container-with-data)
+       (container-with-data/piece-did-update piece opts prev-classes)
 
        (= kind :elem)
        (elem/piece-did-update piece opts prev-classes)
@@ -137,7 +147,9 @@
      (let [children (get piece :children)]
        (cond
          (and children
-              (= kind :container))
+              (or
+               (= kind :container)
+               (= kind :container-with-data)))
          (doseq [child children]
            (handle-piece-did-update child opts (conj prev-classes class)))
 
